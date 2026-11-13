@@ -1,0 +1,22 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+.env.*
+!.env.example
+data/raw/
+
+# Generated model binaries and intermediate data
+*.joblib
+*.pkl
+*.db
+
+# Large local artifacts excluded from GitHub
+data/processed/random_forest_model.joblib
+data/processed/first_window_random_forest_model.joblib
+data/processed/train_features.pkl
+data/processed/customer_eda_source.csv
+data/processed/train_preprocessed.pkl

@@ -1,0 +1,8 @@
+{
+    "observations": 40282,
+    "features": 33,
+    "shap_method": "LightGBM native TreeSHAP contributions",
+    "max_additivity_error": 1.2369127944111824e-10,
+    "additivity_validation": "PASS",
+    "local_cases": 3
+}

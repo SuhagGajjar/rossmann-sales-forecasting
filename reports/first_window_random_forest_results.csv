@@ -1,0 +1,2 @@
+Model,MAE,RMSE,WMAPE,RMSLE,RowsEvaluated,StoreDateAlignment,ValidationType,ValidationStart,ValidationEnd,TrainingCutoff,TrainingRows
+RandomForest,511.6406423634495,811.8973154656429,0.08782607053237282,0.11852353707035979,46830,PASS,Recursive,2015-05-09,2015-06-19,2015-05-08,766637

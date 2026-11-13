@@ -1,0 +1,26 @@
+{
+    "analysis": "Sales-volume segment performance",
+    "input_file": "models\\experiments\\lightgbm_second_window\\second_window_tuned_lightgbm_predictions.csv",
+    "evaluation_scope": "Open-store observations only",
+    "total_open_observations": 40282,
+    "total_actual_sales": 281113498.0,
+    "quantile_boundaries": {
+        "25th_percentile": 4919.25,
+        "50th_percentile": 6384.0,
+        "75th_percentile": 8367.0
+    },
+    "segment_edges": [
+        null,
+        4919.25,
+        6384.0,
+        8367.0,
+        null
+    ],
+    "segment_labels": [
+        "Low",
+        "Lower-Middle",
+        "Upper-Middle",
+        "High"
+    ],
+    "segmentation_note": "Segments are diagnostic groups defined using actual sales within the validation window. Actual sales are not model inputs."
+}
