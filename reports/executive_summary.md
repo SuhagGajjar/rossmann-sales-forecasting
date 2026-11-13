@@ -27,7 +27,7 @@ This is a meaningful forecasting improvement and a foundation for better commerc
 - **Differences between stores:** results varied considerably. A few stores had much higher errors than the network average and should be reviewed individually. StoreType B showed 6.51% error, but it covered only 17 stores, so it is not enough evidence to assume the same result across a wider group.
 - **Forecast bias:** there is a tendency to forecast above actual sales. In the later test, **61.5% of open-store forecasts were higher than actual sales**. Across those store-days, forecasts were on average about **205 sales units too high per day**, and total forecast sales were about **2.93% above actual sales**. This should be considered when translating forecasts into replenishment decisions.
 
-The customer and promotion exploratory analysis adds useful commercial context:
+## The customer and promotion exploratory analysis adds useful commercial context:
 
 - **Customer traffic and sales move together:** the correlation between daily customer counts and sales was **0.824** across 844,392 open-store observations (and 0.830 at store level across 1,115 stores). Customer traffic is therefore an important lens for understanding store demand, although correlation alone does not establish causation.
 - **Store formats behave differently:** StoreType B had the highest average traffic at **2,021.8 customers per day** (17 stores), while StoreType D had the highest weighted sales per customer at **11.25**. StoreType B had the lowest at **5.06**. This points to differences in traffic and customer spend across store formats that merit more granular investigation.
@@ -36,7 +36,7 @@ The customer and promotion exploratory analysis adds useful commercial context:
 
 Customer counts were available in the historical training data but not in the competition test data, so they were used for exploratory analysis and not as an input to the deployed forecasting feature set. These findings are not an endpoint: they identify questions that richer customer and promotion data can help answer.
 
-## The next opportunity: turn better demand insight into commercial value
+## The Next Opportunity: Turn better demand insight into commercial value
 
 The forecasting work and exploratory findings create a platform for a broader, joined-up commercial deep-dive. The next step is to connect the store-level demand signal with the operational and customer data that influence how stores serve that demand.
 
@@ -47,7 +47,7 @@ The forecasting work and exploratory findings create a platform for a broader, j
 
 Together, these data streams can move the organisation from **forecasting store sales more accurately** towards **understanding demand drivers and optimising the decisions around customers, promotions, inventory and people**. The commercial value—such as improved availability, reduced waste, more effective promotions, better labour utilisation and stronger margin—must be quantified through those deeper analyses and a measured business pilot; it has not been claimed as an outcome of this forecasting exercise.
 
-## Main risks and considerations
+## Main Risks and Considerations
 
 1. **Forecasts are not orders:** the model's tendency to forecast above actual sales means replenishment decisions need product-level stock rules, lead times, shelf life, margin and service targets.
 2. **Promotion effects are not yet explained:** forecast errors were higher during promotion periods, and the exploratory comparisons are descriptive. More detailed campaign and customer data are needed to understand promotion response and improve decisions.
@@ -55,7 +55,7 @@ Together, these data streams can move the organisation from **forecasting store 
 4. **Limited test coverage:** the evaluation covers two consecutive 42-day test periods, not a full year of seasonal trading. Performance across all seasons is not yet established.
 5. **Operational value depends on integration:** the forecast becomes more actionable when connected to inventory, replenishment and workforce information, with appropriate decision rules and ownership.
 
-## What to do next
+## What To Do Next
 
 1. **Run a controlled forecasting pilot:** initially show forecasts alongside existing planning, without allowing them to trigger orders automatically. Track forecast accuracy, bias and store-level exceptions.
 2. **Scope the commercial data deep-dive:** assess availability and quality of customer, promotion, SKU-level inventory, replenishment and workforce data. Prioritise the analyses that can most directly inform commercial decisions.
