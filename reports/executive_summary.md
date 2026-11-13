@@ -1,40 +1,42 @@
 # Executive Summary — Rossmann Store Sales Forecasting
 
+**To:** Chief Commercial Officer  
+**Decision requested:** Approve tuned LightGBM for a controlled production-validation pilot, not an immediate network-wide autonomous rollout.
+
 ## Recommendation
 
-**Advance tuned LightGBM as the preferred candidate for production-readiness validation.** Across two chronological 42-day evaluation windows, it outperformed the tested seasonal-naive, moving-average, naive, Random Forest and untuned LightGBM alternatives on the reported core metrics. It is not yet a production-certified system.
+Select **tuned LightGBM** to produce daily store sales forecasts for the next 42 days. It is the strongest candidate tested and is materially better than the simple seasonal baseline. In the first validation period, it reduced WMAPE from **37.23% to 7.82% — a 79.0% reduction in forecast error**. It also performed best among the tested machine-learning candidates in the later validation period, with **8.56% WMAPE**.
 
-## Business problem
+## What improved
 
-Forecast daily sales for 1,115 Rossmann stores over a six-week horizon. Reliable store-level forecasts can support replenishment planning, inventory availability, promotion planning and working-capital efficiency. Underforecasting risks stockouts and lost sales; overforecasting risks excess inventory, holding costs and waste.
+The model-selection comparison covered the same 42-day period and store-date population:
 
-## What was built
+| Forecast-quality measure | Seasonal baseline | Tuned LightGBM | Improvement |
+|---|---:|---:|---:|
+| WMAPE (lower is better) | 37.23% | **7.82%** | **79.0% lower error** |
+| MAE (sales units; lower is better) | 2,168.95 | **455.60** | **79.0% lower error** |
+| RMSE (sales units; lower is better) | 3,745.19 | **708.49** | **81.1% lower error** |
 
-A global LightGBM forecasting approach uses store attributes, calendar patterns, promotions, holidays, competition information and historical sales. A leakage-safe recursive feature builder generates forecasts across the 42-day horizon, feeding predictions—not actual future sales—back into subsequent lag and rolling features. Closed stores receive zero predicted sales; model training uses open-store observations.
+These are improvements in forecast accuracy, not measured improvements in stock availability, waste, sales, margin or working capital. Those commercial KPIs should be measured during the pilot before claiming financial benefit.
 
-## Results
+In the later 42-day holdout, tuned LightGBM achieved 8.56% WMAPE, compared with 8.75% for untuned LightGBM and 9.24% for Random Forest. The selected model therefore retained its lead on a later period using frozen tuning choices.
 
-| Evaluation window | Selected model | MAE | RMSE | WMAPE | RMSLE |
-|---|---|---:|---:|---:|---:|
-| 9 May–19 June 2015 (selection) | Tuned LightGBM | 455.60 | 708.49 | **7.8206%** | **0.1085** |
-| 20 June–31 July 2015 (later holdout) | Tuned LightGBM | 514.10 | 807.69 | **8.5643%** | **0.1077** |
+## Where it works well — and where it needs attention
 
-In the later holdout, tuned LightGBM improved WMAPE over Random Forest (9.2387%) and untuned LightGBM (8.7480%). The simple seasonal-naive baseline was materially weaker in the model-selection window (37.23% WMAPE). Window 1 informed model selection; Window 2 used the frozen selected hyperparameters and is the primary later-period evidence.
+The model performs consistently across the network, but results are not uniform:
 
-## Operational findings
+- **Relatively strong:** high-sales store-days had 7.55% WMAPE. StoreType B had 6.51% pooled WMAPE, although this result covers only 17 stores and should be treated cautiously.
+- **Needs attention:** low-sales store-days had 10.74% WMAPE. Promotion-active days had 9.06%, compared with 8.06% when daily promotions were inactive. Days with both promotion programmes active reached 10.02%.
+- **Store-specific exceptions:** some stores had much higher error than the network average; a few worst cases exceeded 35–46% WMAPE, with limited validation observations for some stores. These stores need individual review rather than a blanket network-wide assumption.
 
-- Forecast error varies substantially by store. A few stores have WMAPE above 35%, often with limited open-day coverage; store-level monitoring is essential.
-- Low-volume store-days have higher proportional error (10.74% WMAPE) than high-volume store-days (7.55%).
-- Daily promotion-active observations have higher WMAPE (9.06%) than inactive observations (8.06%). The combined daily Promo + Promo2-active segment has 10.02% WMAPE.
-- Aggregate bias is positive: 61.51% of open-store predictions are overforecasts, versus 38.49% underforecasts. Mean bias is +204.51 sales units per open store-day; net total bias is approximately +8.24 million (2.93% of actual sales).
-- TreeSHAP indicates store-weekday historical mean, daily Promo and recent sales lags are the strongest global contributors. Additivity validation passed.
+The model also tends to forecast high: 61.5% of open-store predictions were above actual sales in the later holdout. Average bias was +204.51 sales units per open store-day, equivalent to a net positive difference of approximately 2.93% of actual sales across that period. This could lead to excess stock if forecasts are translated directly into replenishment orders.
 
-## Delivery and controls
+## Main risks and actions before production
 
-The repository contains modular preprocessing, feature engineering, recursive forecasting, model training, tuning, evaluation and explainability code, alongside saved metrics, predictions and diagnostics. Before deployment, add automated data contracts, reproducible scheduled training/inference, model/version registry, drift and accuracy monitoring, store/promotion alerting, business-cost calibration, uncertainty estimates and shadow rollout.
+1. **Commercial cost is not yet optimised.** Forecast accuracy alone does not balance the cost of excess inventory against lost sales. Calibrate decisions using product margins, lead times, holding costs and service-level targets.
+2. **Review high-risk segments.** Investigate low-volume stores, promotion periods and stores with persistent over- or underforecasting. Set store-level and promotion-level alert thresholds.
+3. **Run a controlled pilot.** Generate forecasts in shadow mode alongside the current planning process. Compare forecast-driven recommendations with actual orders, availability, waste and sales outcomes before changing replenishment decisions.
+4. **Establish operating controls.** Validate incoming data, monitor forecast error and bias as actual sales arrive, track model versions, define retraining triggers and provide a fallback when data checks fail.
+5. **Broaden validation.** The evidence covers two 42-day periods, not a complete annual cycle. Test additional seasonal periods and operational conditions before a full rollout.
 
-## Caveats
-
-The evidence is based on two 42-day periods, not a full annual cycle. Window 1 was used for tuning; Window 2 is a later holdout but not a fully untouched external test. Forecasts are point estimates. Weather, stockouts, local events and detailed promotion mechanics are not fully represented. Segment comparisons and SHAP attributions are descriptive, not causal.
-
-**Decision:** proceed with tuned LightGBM to a controlled production validation stage, with store-level and promotion-aware monitoring and explicit review of positive forecast bias.
+**Bottom line:** tuned LightGBM is the clear forecasting candidate from this evaluation and substantially reduces forecast error versus the seasonal baseline. Approve it for controlled production validation, with special attention to positive bias, promotion periods and store-level exceptions. Measure commercial KPIs in the pilot before scaling.
